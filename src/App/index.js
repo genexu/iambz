@@ -1,19 +1,26 @@
-import React, { Component } from 'react';
-import './style.css';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Navbar from './Navbar';
+import './style.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+const App = ({ children }) => {
+  return (
+    <div className="App">
+      <Navbar />
+      <div className="container">
+        { children }
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+App.defaultProps = {
+  children: <div>Children</div>,
+};
+
+App.propTypes = {
+  children: PropTypes.element,
+};
+
 
 export default App;
