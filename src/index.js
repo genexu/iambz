@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import registerServiceWorker from './registerServiceWorker';
-import reducers from './reducers'
+import reducers from './reducers';
 import App from './App';
 import Signin from './Signin';
 import Register from './Register';
@@ -18,11 +18,11 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
       <Route path="/" component={App}>
-        <Route path="signin" component={Signin}/>
-        <Route path="register" component={Register}/>
+        <Route path="signin" component={Signin} />
+        <Route path="register" component={Register} />
       </Route>
     </Router>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 registerServiceWorker();

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Navbar from './Navbar';
-import './style.css'
+import './style.css';
 
 const App = ({ children }) => {
   return (
@@ -12,7 +12,7 @@ const App = ({ children }) => {
       </div>
     </div>
   );
-}
+};
 
 App.defaultProps = {
   children: <div>Children</div>,
