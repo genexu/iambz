@@ -23,8 +23,27 @@ function* watchUserRegister() {
   }
 }
 
+function* signinUser(email, password) {
+  const resp = yield call(firebaseUserSignin, email, password);
+  if (!resp.code) {
+    const user = yield call(firebaseCurrentUser);
+    yield put(actions.updateAppUser({ uid: user.uid, email: user.email }));
+    browserHistory.push('/');
+  } else {
+    yield put(actions.signinFailure({ message: resp.message }));
+  }
+}
+
+function* watchUserSignin() {
+  while (true) {
+    const { payload } = yield take(actions.REQUEST_SIGNIN);
+    yield call(signinUser, payload.email, payload.password);
+  }
+}
+
 export default function* root() {
   yield all([
     fork(watchUserRegister),
+    fork(watchUserSignin),
   ]);
 }

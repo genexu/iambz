@@ -15,3 +15,11 @@ export const CLEAR_APP_USER = 'CLEAR_APP_USER';
 
 export const updateAppUser = createAction(UPDATE_APP_USER);
 export const clearAppUser = createAction(CLEAR_APP_USER);
+
+export const REQUEST_SIGNIN = 'REQUEST_SIGNIN';
+export const SIGNIN_SUCCESS = 'SIGNIN_SUCCESS';
+export const SIGNIN_FAILURE = 'SIGNIN_FAILURE';
+
+export const requestSignin = createAction(REQUEST_SIGNIN);
+export const signinSuccess = createAction(SIGNIN_SUCCESS);
+export const signinFailure = createAction(SIGNIN_FAILURE);
