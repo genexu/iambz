@@ -11,6 +11,7 @@ import rootSaga from './sagas';
 import App from './App';
 import Signin from './Signin';
 import Register from './Register';
+import ISpace from './ISpace';
 import './index.css';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -30,6 +31,7 @@ ReactDOM.render(
       <Route path="/" component={App}>
         <Route path="signin" component={Signin} />
         <Route path="register" component={Register} />
+        <Route path="ispace/:uid" component={ISpace} />
       </Route>
     </Router>
   </Provider>,
