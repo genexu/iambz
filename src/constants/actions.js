@@ -12,9 +12,11 @@ export const registerPreValidateFailure = createAction(REGISTER_PREVALIDATE_FAIL
 
 export const UPDATE_APP_USER = 'UPDATE_APP_USER';
 export const CLEAR_APP_USER = 'CLEAR_APP_USER';
+export const REQUEST_LOGOUT = 'REQUEST_LOGOUT';
 
 export const updateAppUser = createAction(UPDATE_APP_USER);
 export const clearAppUser = createAction(CLEAR_APP_USER);
+export const requestLogout = createAction(REQUEST_LOGOUT);
 
 export const REQUEST_SIGNIN = 'REQUEST_SIGNIN';
 export const SIGNIN_SUCCESS = 'SIGNIN_SUCCESS';

@@ -31,6 +31,16 @@ export const firebaseUserSignin = (email, password) => {
     });
 };
 
+export const firebaseUserLogout = () => {
+  return firebase.auth().signOut()
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
 export const firebaseCurrentUser = () => {
   return firebase.auth().currentUser;
 };

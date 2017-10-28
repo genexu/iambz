@@ -1,8 +1,9 @@
-import { UPDATE_APP_USER } from '../constants/actions';
+import { UPDATE_APP_USER, CLEAR_APP_USER } from '../constants/actions';
 
 const init = {
   uid: '',
   email: '',
+  token: '',
 };
 
 const appReducer = (state = init, action) => {
@@ -14,8 +15,17 @@ const appReducer = (state = init, action) => {
       });
       return data;
     }
-    default:
+    case CLEAR_APP_USER: {
+      return {
+        ...state,
+        uid: '',
+        email: '',
+        token: '',
+      };
+    }
+    default: {
       return state;
+    }
   }
 };
 
