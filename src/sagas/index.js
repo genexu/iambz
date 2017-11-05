@@ -9,6 +9,13 @@ function* logoutUser() {
   browserHistory.push('/');
 }
 
+function* watchUserLogout() {
+  while (true) {
+    yield take(actions.requestLogout);
+    yield call(logoutUser);
+  }
+}
+
 function* registerUser(email, password) {
   const resp = yield call(firebaseUserRegister, email, password);
   if (!resp.code) {
@@ -59,5 +66,6 @@ export default function* root() {
   yield all([
     fork(watchUserRegister),
     fork(watchUserSignin),
+    fork(watchUserLogout),
   ]);
 }

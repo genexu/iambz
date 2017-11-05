@@ -12,6 +12,7 @@ import App from './App';
 import Signin from './Signin';
 import Register from './Register';
 import ISpace from './ISpace';
+import { firebaseInitAuthState } from './firebaseService';
 import './index.css';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -25,16 +26,22 @@ sagaMiddleware.run(rootSaga);
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={App}>
-        <Route path="signin" component={Signin} />
-        <Route path="register" component={Register} />
-        <Route path="ispace/:uid" component={ISpace} />
-      </Route>
-    </Router>
-  </Provider>,
-  document.getElementById('root'),
-);
+const render = () => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history}>
+        <Route path="/" component={App}>
+          <Route path="signin" component={Signin} />
+          <Route path="register" component={Register} />
+          <Route path="ispace/:uid" component={ISpace} />
+        </Route>
+      </Router>
+    </Provider>,
+    document.getElementById('root'),
+  );
+};
+
 registerServiceWorker();
+
+firebaseInitAuthState(store.dispatch)
+  .then(() => render());
