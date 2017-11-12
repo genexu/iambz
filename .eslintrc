@@ -6,6 +6,7 @@
         "node":    true,
         "mocha":   true
     },   
+    "parser": "babel-eslint",
     "rules": {
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "arrow-body-style": [0]
