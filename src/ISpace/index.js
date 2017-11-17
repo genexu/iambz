@@ -16,6 +16,7 @@ class ISpace extends Component {
       appointed: localStorage.getItem('appointment'),
       isSpaceOwner: this.props.params.uid === this.props.uid,
       appointmentList: [],
+      connection: 0,
     };
     this.socket = io(`${wl.protocol}//${wl.hostname}:3001`, {
       autoConnect: false,
@@ -34,6 +35,16 @@ class ISpace extends Component {
       this.state.appointmentList.push(res.appointment);
       this.setState({
         appointmentList: this.state.appointmentList,
+      });
+    });
+    this.socket.on('NEW_FRIEND_JOIN', (res) => {
+      this.setState({
+        connection: res.clientNumber,
+      });
+    });
+    this.socket.on('CLIENT_LEAVE', (res) => {
+      this.setState({
+        connection: res.clientNumber,
       });
     });
     if (this.state.isSpaceOwner || this.state.appointed) {
@@ -62,12 +73,31 @@ class ISpace extends Component {
     this.setState({
       appointed: true,
     });
+    this.socket.open();
+    this.socket.emit('JOIN_ROOM', { roomName: this.props.params.uid });
   }
   handleAppointmentCancle = () => {
     localStorage.removeItem('appointment');
     this.setState({
       appointed: false,
     });
+    this.socket.close();
+  }
+  handleStateBlock = () => {
+    const connectionMessage = this.state.appointed || this.state.isSpaceOwner ?
+      <h3>{this.state.connection}</h3> :
+      <p>Make a appointment to join the room.</p>;
+    return (
+      <div className="card">
+        <div className="card-body">
+          <h5>Space Owner</h5>
+          <p>Offline</p>
+          <hr />
+          <h5>Connection</h5>
+          {connectionMessage}
+        </div>
+      </div>
+    );
   }
   handleReservationBlock = () => {
     if (this.state.isSpaceOwner) {
@@ -98,7 +128,12 @@ class ISpace extends Component {
   render() {
     return (
       <div className="row justify-content-center pt-3">
-        { this.handleReservationBlock() }
+        <div className="col-12 col-sm-4 col-md-3">
+          { this.handleStateBlock() }
+        </div>
+        <div className="col-12 col-sm-8 col-md-9">
+          { this.handleReservationBlock() }
+        </div>
       </div>
     );
   }

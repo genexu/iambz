@@ -21,6 +21,10 @@ io.on('connection', (socket) => {
   socket.on('JOIN_ROOM', (res) => {
     console.log(`id ${socket.id} is join the room [${res.roomName}]`);
     socket.join(res.roomName);
+    io.in(res.roomName).clients((err, clients) => {
+      console.log(`IDs In Room:${res.roomName} [${clients}]`);
+      io.in(res.roomName).emit('NEW_FRIEND_JOIN', { clientNumber: clients.length });
+    });
   });
   socket.on('REQUEST_CLIENT_APPOINTMENT', (res) => {
     console.log(`Space Owner ID:${socket.id} Request Client Appointment`);
@@ -36,5 +40,15 @@ io.on('connection', (socket) => {
   });
   socket.on('disconnecting', () => {
     console.log(`id ${socket.id} is disconnected`);
+    Object.keys(socket.rooms)
+      .filter(roomId => roomId !== socket.id)
+      .map((roomId) => {
+        socket.leave(roomId);
+        io.in(roomId).clients((err, clients) => {
+          console.log(`IDs In Room:${roomId} [${clients}]`);
+          io.in(roomId).emit('CLIENT_LEAVE', { clientNumber: clients.length });
+        });
+        return true;
+      });
   });
 });
