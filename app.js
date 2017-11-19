@@ -23,8 +23,14 @@ io.on('connection', (socket) => {
     socket.join(res.roomName);
     io.in(res.roomName).clients((err, clients) => {
       console.log(`IDs In Room:${res.roomName} [${clients}]`);
-      io.in(res.roomName).emit('NEW_FRIEND_JOIN', { clientNumber: clients.length });
+      io.in(res.roomName).emit('NEW_FRIEND_JOIN', {
+        id: socket.id,
+        clientNumber: clients.length,
+      });
     });
+  });
+  socket.on('SPACE_OWNER_GREETING', (res) => {
+    socket.to(res.id).emit('SPACE_OWNER_GREETING');
   });
   socket.on('REQUEST_CLIENT_APPOINTMENT', (res) => {
     console.log(`Space Owner ID:${socket.id} Request Client Appointment`);
@@ -37,6 +43,9 @@ io.on('connection', (socket) => {
     socket.to(res.receiver).emit('RECEIVE_APPOINTMENT', {
       appointment: res.appointment,
     });
+  });
+  socket.on('SPACE_OWNER_STATUS_CHANGE', (res) => {
+    socket.to(res.roomName).emit('SPACE_OWNER_STATUS_CHANGE', { status: res.status });
   });
   socket.on('disconnecting', () => {
     console.log(`id ${socket.id} is disconnected`);

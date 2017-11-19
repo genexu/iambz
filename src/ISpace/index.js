@@ -17,6 +17,7 @@ class ISpace extends Component {
       isSpaceOwner: this.props.params.uid === this.props.uid,
       appointmentList: [],
       connection: 0,
+      isSpaceOwnerOnline: false,
     };
     this.socket = io(`${wl.protocol}//${wl.hostname}:3001`, {
       autoConnect: false,
@@ -38,8 +39,16 @@ class ISpace extends Component {
       });
     });
     this.socket.on('NEW_FRIEND_JOIN', (res) => {
+      if (this.state.isSpaceOwner) {
+        this.socket.emit('SPACE_OWNER_GREETING', { id: res.id });
+      }
       this.setState({
         connection: res.clientNumber,
+      });
+    });
+    this.socket.on('SPACE_OWNER_GREETING', () => {
+      this.setState({
+        isSpaceOwnerOnline: true,
       });
     });
     this.socket.on('CLIENT_LEAVE', (res) => {
@@ -47,11 +56,34 @@ class ISpace extends Component {
         connection: res.clientNumber,
       });
     });
+    this.socket.on('SPACE_OWNER_STATUS_CHANGE', (res) => {
+      this.setState({
+        isSpaceOwnerOnline: res.status,
+      });
+    });
     if (this.state.isSpaceOwner || this.state.appointed) {
       this.socket.open();
       this.socket.emit('JOIN_ROOM', { roomName: this.props.params.uid });
     }
     if (this.state.isSpaceOwner) {
+      this.socket.on('connect', () => {
+        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
+          roomName: this.props.uid,
+          status: true,
+        });
+      });
+      this.socket.on('disconnect', () => {
+        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
+          roomName: this.props.uid,
+          status: false,
+        });
+      });
+      window.onbeforeunload = () => {
+        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
+          roomName: this.props.uid,
+          status: false,
+        });
+      };
       this.socket.emit('REQUEST_CLIENT_APPOINTMENT', { roomName: this.props.uid });
     }
   }
@@ -80,6 +112,7 @@ class ISpace extends Component {
     localStorage.removeItem('appointment');
     this.setState({
       appointed: false,
+      isSpaceOwnerOnline: false,
     });
     this.socket.close();
   }
@@ -87,11 +120,17 @@ class ISpace extends Component {
     const connectionMessage = this.state.appointed || this.state.isSpaceOwner ?
       <h3>{this.state.connection}</h3> :
       <p>Make a appointment to join the room.</p>;
+    let spaceOwnerStatus = '--';
+    if (this.state.isSpaceOwner || this.state.isSpaceOwnerOnline) {
+      spaceOwnerStatus = 'Online';
+    } else if (this.state.appointed) {
+      spaceOwnerStatus = 'Offline';
+    }
     return (
       <div className="card">
         <div className="card-body">
           <h5>Space Owner</h5>
-          <p>Offline</p>
+          <p>{spaceOwnerStatus}</p>
           <hr />
           <h5>Connection</h5>
           {connectionMessage}
