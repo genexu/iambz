@@ -41,6 +41,7 @@ class ISpace extends Component {
     this.socket.on('NEW_FRIEND_JOIN', (res) => {
       if (this.state.isSpaceOwner) {
         this.socket.emit('SPACE_OWNER_GREETING', { id: res.id });
+        this.socketRequestClientAppointment();
       }
       this.setState({
         connection: res.clientNumber,
@@ -55,6 +56,9 @@ class ISpace extends Component {
       this.setState({
         connection: res.clientNumber,
       });
+      if (this.state.isSpaceOwner) {
+        this.socketRequestClientAppointment();
+      }
     });
     this.socket.on('SPACE_OWNER_STATUS_CHANGE', (res) => {
       this.setState({
@@ -67,25 +71,25 @@ class ISpace extends Component {
     }
     if (this.state.isSpaceOwner) {
       this.socket.on('connect', () => {
-        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
-          roomName: this.props.uid,
-          status: true,
-        });
+        this.socketSpaceOwnerStatusChange(true);
       });
       this.socket.on('disconnect', () => {
-        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
-          roomName: this.props.uid,
-          status: false,
-        });
+        this.socketSpaceOwnerStatusChange(false);
       });
       window.onbeforeunload = () => {
-        this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
-          roomName: this.props.uid,
-          status: false,
-        });
+        this.socketSpaceOwnerStatusChange(false);
       };
-      this.socket.emit('REQUEST_CLIENT_APPOINTMENT', { roomName: this.props.uid });
     }
+  }
+  socketRequestClientAppointment = () => {
+    this.setState({ appointmentList: [] });
+    this.socket.emit('REQUEST_CLIENT_APPOINTMENT', { roomName: this.props.uid });
+  }
+  socketSpaceOwnerStatusChange = (status) => {
+    this.socket.emit('SPACE_OWNER_STATUS_CHANGE', {
+      roomName: this.props.uid,
+      status,
+    });
   }
   handleAppointmentTitleTextFieldChange = (e) => {
     this.setState({
