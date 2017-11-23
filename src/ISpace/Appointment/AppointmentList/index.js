@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const AppointmentList = (props) => {
   const appointmentItems = props.appointments.map((appointment) => {
     return (
-      <div className="card w-100">
+      <div className="card w-100 mb-3">
         <div className="card-header">{appointment.title}</div>
         <div className="card-body">
           <p className="card-text">{appointment.content}</p>

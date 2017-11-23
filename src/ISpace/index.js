@@ -170,7 +170,7 @@ class ISpace extends Component {
   }
   render() {
     return (
-      <div className="row justify-content-center pt-3">
+      <div className="row justify-content-center">
         <div className="col-12 col-sm-4 col-md-3">
           { this.handleStateBlock() }
         </div>
