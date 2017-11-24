@@ -2,18 +2,19 @@ const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
 const path = require('path');
+const CONFIG = require('./config.js');
 
 const app = express();
 const server = http.Server(app);
 const io = socketio(server);
 
-app.use(express.static(path.resolve(__dirname, 'client')));
+app.use(express.static(path.resolve(__dirname, '../client')));
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'index.html'));
+  res.sendFile(path.resolve(__dirname, '../client', 'index.html'));
 });
 
-server.listen(3001, () => {
-  console.log('Linstening On Port 3001');
+server.listen(CONFIG.PORT, () => {
+  console.log(`Linstening On Port ${CONFIG.PORT}`);
 });
 
 io.on('connection', (socket) => {

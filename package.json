@@ -19,7 +19,7 @@
     "socket.io-client": "^2.0.4"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/server.js",
     "client-serve": "react-scripts start",
     "build": "react-scripts build && mv build client",
     "test": "react-scripts test --env=jsdom",
