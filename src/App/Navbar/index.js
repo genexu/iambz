@@ -40,7 +40,7 @@ class Navbar extends Component {
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a className="navbar-brand" href="/">IAMBZ</a>
+        <button className="btn btn-outline-secondary border-0 navbar-brand text-white" onClick={() => { this.props.router.push('/'); }}>IAMBZ</button>
         <button
           className="navbar-toggler"
           type="button"

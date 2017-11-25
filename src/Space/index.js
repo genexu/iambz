@@ -91,6 +91,12 @@ class Space extends Component {
     }
     // Event End
   }
+  componentWillUnmount() {
+    if (this.state.isSpaceOwner) {
+      this.socketSpaceOwnerStatusChange(false);
+    }
+    this.socket.close();
+  }
   socketRequestClientAppointment = () => {
     this.setState({ appointmentList: [] });
     this.socket.emit(events.REQUEST_CLIENT_APPOINTMENT, { roomName: this.props.uid });
