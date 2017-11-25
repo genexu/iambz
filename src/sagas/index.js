@@ -25,7 +25,7 @@ function* registerUser(email, password) {
     const token = yield user.getIdToken();
     yield put(actions.updateAppUser({ uid: user.uid, email: user.email, token }));
     yield put(actions.signinSuccess());
-    browserHistory.push(`/ispace/${user.uid}`);
+    browserHistory.push(`/space/${user.uid}`);
   } else {
     yield put(actions.registerFailure({ message: resp.message }));
   }
@@ -47,7 +47,7 @@ function* signinUser(email, password) {
     const token = yield user.getIdToken();
     yield put(actions.updateAppUser({ uid: user.uid, email: user.email, token }));
     yield put(actions.signinSuccess());
-    browserHistory.push(`/ispace/${user.uid}`);
+    browserHistory.push(`/space/${user.uid}`);
   } else {
     yield put(actions.signinFailure({ message: resp.message }));
   }

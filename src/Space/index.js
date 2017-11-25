@@ -8,7 +8,7 @@ import AppointmentAddBlock from './Appointment/AppointmentAddBlock';
 import AppointmentCard from './Appointment/AppointmentCard';
 import AppointmentList from './Appointment/AppointmentList';
 
-class ISpace extends Component {
+class Space extends Component {
   constructor(props) {
     super(props);
     const wl = window.location;
@@ -198,11 +198,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-ISpace.propTypes = {
+Space.propTypes = {
   params: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
   uid: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToProps, null)(ISpace);
+export default connect(mapStateToProps, null)(Space);

@@ -11,7 +11,7 @@ class Navbar extends Component {
     let item = [];
     if (this.props.uid !== '') {
       item = [
-        { value: 'My Space', href: `/ispace/${this.props.uid}` },
+        { value: 'My Space', href: `/space/${this.props.uid}` },
       ];
       rows.push((
         <NavItem

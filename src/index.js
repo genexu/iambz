@@ -11,7 +11,7 @@ import rootSaga from './sagas';
 import App from './App';
 import Signin from './Signin';
 import Register from './Register';
-import ISpace from './ISpace';
+import Space from './Space';
 import { firebaseInitAuthState } from './firebaseService';
 import './index.css';
 
@@ -33,7 +33,7 @@ const render = () => {
         <Route path="/" component={App}>
           <Route path="signin" component={Signin} />
           <Route path="register" component={Register} />
-          <Route path="ispace/:uid" component={ISpace} />
+          <Route path="space/:uid" component={Space} />
         </Route>
       </Router>
     </Provider>,
