@@ -160,10 +160,14 @@ class Space extends Component {
   }
   handleReservationBlock = () => {
     if (this.state.isSpaceOwner) {
-      return (
+      return this.state.appointmentList.length !== 0 ? (
         <AppointmentList
           appointments={this.state.appointmentList}
         />
+      ) : (
+        <div className="alert alert-light" role="alert">
+          There are no appointment received yet
+        </div>
       );
     }
     if (this.state.appointed) {
