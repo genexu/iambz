@@ -3,6 +3,7 @@ const http = require('http');
 const socketio = require('socket.io');
 const path = require('path');
 const CONFIG = require('./config.js');
+const EVENTS = require('./constants/events.js');
 
 const app = express();
 const server = http.Server(app);
@@ -19,34 +20,34 @@ server.listen(CONFIG.PORT, () => {
 
 io.on('connection', (socket) => {
   console.log(`id ${socket.id} is connected`);
-  socket.on('JOIN_ROOM', (res) => {
+  socket.on(EVENTS.CLIENT_JOIN_ROOM, (res) => {
     console.log(`id ${socket.id} is join the room [${res.roomName}]`);
     socket.join(res.roomName);
     io.in(res.roomName).clients((err, clients) => {
       console.log(`IDs In Room:${res.roomName} [${clients}]`);
-      io.in(res.roomName).emit('NEW_FRIEND_JOIN', {
+      io.in(res.roomName).emit(EVENTS.CLIENT_JOIN_ROOM, {
         id: socket.id,
         clientNumber: clients.length,
       });
     });
   });
-  socket.on('SPACE_OWNER_GREETING', (res) => {
-    socket.to(res.id).emit('SPACE_OWNER_GREETING');
+  socket.on(EVENTS.SPACE_OWNER_GREETING, (res) => {
+    socket.to(res.id).emit(EVENTS.SPACE_OWNER_GREETING);
   });
-  socket.on('REQUEST_CLIENT_APPOINTMENT', (res) => {
+  socket.on(EVENTS.REQUEST_CLIENT_APPOINTMENT, (res) => {
     console.log(`Space Owner ID:${socket.id} Request Client Appointment`);
     io.in(res.roomName).clients((err, clients) => {
       console.log(`IDs In Room:${res.roomName} [${clients}]`);
     });
-    socket.to(res.roomName).emit('APPOINTMENT_SUBMIT_ONDER', { sender: socket.id });
+    socket.to(res.roomName).emit(EVENTS.REQUEST_CLIENT_APPOINTMENT, { sender: socket.id });
   });
-  socket.on('SUBMIT_APPOINTMENT', (res) => {
-    socket.to(res.receiver).emit('RECEIVE_APPOINTMENT', {
+  socket.on(EVENTS.CLIENT_SUBMIT_APPOINTMENT, (res) => {
+    socket.to(res.receiver).emit(EVENTS.CLIENT_SUBMIT_APPOINTMENT, {
       appointment: res.appointment,
     });
   });
-  socket.on('SPACE_OWNER_STATUS_CHANGE', (res) => {
-    socket.to(res.roomName).emit('SPACE_OWNER_STATUS_CHANGE', { status: res.status });
+  socket.on(EVENTS.SPACE_OWNER_STATUS_CHANGE, (res) => {
+    socket.to(res.roomName).emit(EVENTS.SPACE_OWNER_STATUS_CHANGE, { status: res.status });
   });
   socket.on('disconnecting', () => {
     console.log(`id ${socket.id} is disconnected`);
@@ -56,7 +57,7 @@ io.on('connection', (socket) => {
         socket.leave(roomId);
         io.in(roomId).clients((err, clients) => {
           console.log(`IDs In Room:${roomId} [${clients}]`);
-          io.in(roomId).emit('CLIENT_LEAVE', { clientNumber: clients.length });
+          io.in(roomId).emit(EVENTS.CLIENT_LEAVE, { clientNumber: clients.length });
         });
         return true;
       });
